@@ -60,11 +60,10 @@ export default function LandingPage() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {/* Removed Features and Solution links */}
+            <ThemeToggle />
             <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
               Login
             </Link>
-            <ThemeToggle />
             <Link href="/signup">
               <Button className="gradient-primary text-white hover:opacity-90 transition-all duration-300 animate-glow">
                 Get Started
