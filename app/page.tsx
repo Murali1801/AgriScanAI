@@ -5,16 +5,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Leaf, Camera, Brain, Shield, Users, TrendingUp, ArrowRight, Menu, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useRef } from "react"
 import React from "react"
+import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth"
+import app from "@/lib/firebase"
 
 export default function LandingPage() {
   const featuresRef = useRef<HTMLDivElement>(null)
   const solutionRef = useRef<HTMLDivElement>(null)
   const [highlight, setHighlight] = React.useState(false)
   const [solutionHighlight, setSolutionHighlight] = React.useState(false)
+
+  // User state for popup menu
+  const [user, setUser] = React.useState<User | null>(null)
+  React.useEffect(() => {
+    const auth = getAuth(app)
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser)
+    })
+    return () => unsubscribe()
+  }, [])
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User"
+  const email = user?.email || ""
+  const avatar = user?.photoURL || "/placeholder.svg?height=32&width=32"
 
   const handleFeaturesClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -34,7 +49,7 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen">
       {/* ===== HEADER SECTION ===== */}
       <header className="sticky top-0 z-50 w-full glass backdrop-blur-md border-b border-white/10">
-        <div className="container flex h-16 items-center justify-between px-4">
+        <div className="container max-w-7xl flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 mx-auto">
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="flex items-center justify-center w-8 h-8 gradient-primary rounded-lg animate-glow">
@@ -45,20 +60,7 @@ export default function LandingPage() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <a
-              href="#features"
-              className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
-              onClick={handleFeaturesClick}
-            >
-              Features
-            </a>
-            <a
-              href="#solution"
-              className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
-              onClick={handleSolutionClick}
-            >
-              Solution
-            </a>
+            {/* Removed Features and Solution links */}
             <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
               Login
             </Link>
@@ -72,44 +74,30 @@ export default function LandingPage() {
 
           {/* Mobile Navigation */}
           <div className="flex items-center space-x-2 md:hidden">
-            <ThemeToggle />
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="glass">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="glass order-first">
                   <Menu className="h-5 w-5" />
                 </Button>
-              </SheetTrigger>
-              <SheetContent className="glass-card">
-                <div className="flex flex-col space-y-4 mt-8">
-                  <a
-                    href="#features"
-                    className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
-                    onClick={handleFeaturesClick}
-                  >
-                    Features
-                  </a>
-                  <a
-                    href="#solution"
-                    className="text-sm font-medium hover:text-primary transition-colors cursor-pointer"
-                    onClick={handleSolutionClick}
-                  >
-                    Solution
-                  </a>
-                  <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
-                    Login
-                  </Link>
-                  <Link href="/signup">
-                    <Button className="w-full gradient-primary text-white">Get Started</Button>
-                  </Link>
-                </div>
-              </SheetContent>
-            </Sheet>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8}>
+                <DropdownMenuItem asChild>
+                  <Link href="/login">Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/signup" className="gradient-primary text-white px-3 py-1.5 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary/50">Get Started</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="order-last">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
 
       {/* ===== HERO SECTION ===== */}
-      <section className="relative py-20 px-4 overflow-hidden bg-gradient-to-br from-background via-primary/5 to-pink/5">
+      <section className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-background via-primary/5 to-pink/5">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-pink/10 to-chart-2/10"></div>
         <div className="absolute top-20 left-10 w-72 h-72 gradient-hero rounded-full blur-3xl opacity-20 animate-float"></div>
@@ -118,7 +106,7 @@ export default function LandingPage() {
           style={{ animationDelay: "2s" }}
         ></div>
 
-        <div className="container mx-auto text-center relative z-10">
+        <div className="container mx-auto text-center relative z-10 max-w-5xl px-0 sm:px-4">
           {/* Hero Badge */}
           <Badge className="mb-6 glass text-primary border-primary/20 animate-float px-4 py-2">
             <Sparkles className="w-4 h-4 mr-2" />
@@ -126,7 +114,7 @@ export default function LandingPage() {
           </Badge>
 
           {/* Hero Title */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 animate-float">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 animate-float">
             Protect Your Crops with
             <span className="bg-gradient-to-r from-primary via-pink to-chart-2 bg-clip-text text-transparent block mt-2">
               Smart AI Detection
@@ -134,32 +122,34 @@ export default function LandingPage() {
           </h1>
 
           {/* Hero Description */}
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl sm:max-w-4xl mx-auto leading-relaxed">
             Instantly identify crop diseases through leaf image uploads. Get real-time results with treatment
             recommendations to save your harvest and increase yields.
           </p>
 
           {/* Hero CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link href="/signup">
-              <Button size="lg" className="gradient-primary text-white hover:opacity-90 text-lg px-8 py-4 animate-glow">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 sm:mb-16 w-full max-w-xl mx-auto">
+            <Link href="/signup" className="w-full">
+              <Button size="lg" className="w-full gradient-primary text-white hover:opacity-90 text-lg px-8 py-4 animate-glow">
                 Start Scanning Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-4 glass hover:glass-dark transition-all duration-300 bg-transparent"
-            >
-              Watch Demo
-            </Button>
+            <div className="w-full">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full text-lg px-8 py-4 glass hover:glass-dark transition-all duration-300 bg-transparent"
+              >
+                Watch Demo
+              </Button>
+            </div>
           </div>
 
           {/* Hero Process Visualization */}
           <div className="animate-float">
-            <div className="glass-card rounded-2xl p-8 inline-block max-w-5xl">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            <div className="glass-card rounded-2xl p-6 sm:p-8 inline-block w-full max-w-5xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-center">
                 <div className="text-center group">
                   <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-glow group-hover:scale-110 transition-transform duration-300">
                     <Camera className="h-10 w-10 text-white" />
@@ -190,8 +180,8 @@ export default function LandingPage() {
       </section>
 
       {/* ===== PROBLEM STATEMENT SECTION ===== */}
-      <section className="py-20 relative bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-14 sm:py-20 relative bg-gradient-to-b from-background to-muted/30">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">The Crisis Facing Indian Farmers</h2>
@@ -201,7 +191,7 @@ export default function LandingPage() {
           </div>
 
           {/* Problem Cards */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
             <Card className="glass-card hover:glass transition-all duration-300 border-red-200/20 group">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -253,9 +243,9 @@ export default function LandingPage() {
       <section
         id="solution"
         ref={solutionRef}
-        className={`py-20 bg-gradient-to-br from-background to-primary/5 transition-all duration-700 ${solutionHighlight ? "ring-4 ring-primary/40" : ""}`}
+        className={`py-14 sm:py-20 bg-gradient-to-br from-background to-primary/5 transition-all duration-700 ${solutionHighlight ? "ring-4 ring-primary/40" : ""}`}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">Our AI-Powered Solution</h2>
@@ -265,9 +255,9 @@ export default function LandingPage() {
           </div>
 
           {/* Solution Content */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center max-w-7xl mx-auto">
             {/* Features List */}
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div className="flex items-start space-x-4 glass-card p-6 rounded-xl hover:glass transition-all duration-300 group">
                 <div className="flex-shrink-0 w-12 h-12 gradient-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Camera className="h-6 w-6 text-white" />
@@ -306,10 +296,10 @@ export default function LandingPage() {
             </div>
 
             {/* AI Visualization */}
-            <div className="glass-card p-8 rounded-2xl">
+            <div className="glass-card p-6 sm:p-8 rounded-2xl mt-8 lg:mt-0">
               <div className="text-center">
                 <div className="relative">
-                  <div className="w-32 h-32 gradient-hero rounded-full flex items-center justify-center mx-auto mb-6 animate-glow">
+                  <div className="w-32 h-32 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 animate-glow">
                     <Leaf className="h-16 w-16 text-white" />
                   </div>
                   <div className="absolute -top-4 -right-4 w-16 h-16 gradient-secondary rounded-full flex items-center justify-center animate-float">
@@ -337,9 +327,9 @@ export default function LandingPage() {
       <section
         id="features"
         ref={featuresRef}
-        className={`py-20 bg-gradient-to-b from-background via-pink/5 to-primary/5 transition-all duration-700 ${highlight ? "ring-4 ring-primary/40" : ""}`}
+        className={`py-14 sm:py-20 bg-gradient-to-b from-background via-pink/5 to-primary/5 transition-all duration-700 ${highlight ? "ring-4 ring-primary/40" : ""}`}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
@@ -351,7 +341,7 @@ export default function LandingPage() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
             <Card className="glass-card hover:glass transition-all duration-300 group">
               <CardHeader className="text-center">
                 <div className="w-16 h-16 gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:animate-glow group-hover:scale-110 transition-all duration-300">
@@ -440,11 +430,10 @@ export default function LandingPage() {
       </section>
 
       {/* ===== CALL TO ACTION SECTION ===== */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-14 sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 gradient-cta animate-gradient"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Protect Your Crops?</h2>
           <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto">
             Join thousands of farmers already using AgriScan AI to save their harvests and increase yields
@@ -462,10 +451,10 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FOOTER SECTION ===== */}
-      <footer className="glass-card border-t border-white/10 py-12">
-        <div className="container mx-auto px-4">
+      <footer className="glass-card border-t border-white/10 py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Footer Content */}
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             {/* Brand */}
             <div>
               <div className="flex items-center space-x-2 mb-4">
@@ -562,7 +551,7 @@ export default function LandingPage() {
           </div>
 
           {/* Footer Bottom */}
-          <div className="border-t border-border pt-8 text-center text-muted-foreground">
+          <div className="border-t border-border pt-6 sm:pt-8 text-center text-muted-foreground">
             <p>&copy; 2024 AgriScan AI. All rights reserved. Built with ❤️ for farmers worldwide.</p>
           </div>
         </div>

@@ -41,9 +41,9 @@ export default function AnalyticsPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-pink/5">
       <DashboardHeader />
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* ===== BREADCRUMB ===== */}
-        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
           <Link href="/dashboard" className="hover:text-primary transition-colors">
             Dashboard
           </Link>
@@ -52,22 +52,22 @@ export default function AnalyticsPage() {
         </div>
 
         {/* ===== PAGE HEADER ===== */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Farm Analytics</h1>
-            <p className="text-muted-foreground">Comprehensive insights into your crop health and farming patterns</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Farm Analytics</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">Comprehensive insights into your crop health and farming patterns</p>
           </div>
-          <div className="flex space-x-4">
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+            <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh Data
             </Button>
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+            <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
-            <Link href="/dashboard">
-              <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+            <Link href="/dashboard" className="w-full sm:w-auto">
+              <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* ===== KEY METRICS ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="glass-card hover:glass transition-all duration-300 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">Total Scans</CardTitle>
@@ -151,31 +151,31 @@ export default function AnalyticsPage() {
               </div>
               <span>Monthly Scan Trends</span>
             </CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground">
               Track your scanning activity and disease detection over time
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {monthlyData.map((data, index) => (
                 <div
                   key={data.month}
-                  className="flex items-center justify-between p-4 glass rounded-xl hover:glass-dark transition-all duration-300"
+                  className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2 sm:gap-0 p-3 sm:p-4 glass rounded-xl hover:glass-dark transition-all duration-300"
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 gradient-primary rounded-xl flex items-center justify-center">
                       <span className="text-white font-semibold">{data.month}</span>
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">{data.scans} Total Scans</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="font-medium text-foreground text-sm sm:text-base">{data.scans} Total Scans</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {data.diseases} diseases detected, {data.healthy} healthy
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Health Rate</p>
-                    <p className="font-semibold text-foreground">{Math.round((data.healthy / data.scans) * 100)}%</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Health Rate</p>
+                    <p className="font-semibold text-foreground text-sm sm:text-base">{Math.round((data.healthy / data.scans) * 100)}%</p>
                   </div>
                 </div>
               ))}
@@ -192,27 +192,27 @@ export default function AnalyticsPage() {
               </div>
               <span>Crop-wise Analysis</span>
             </CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground">
               Detailed breakdown of health metrics by crop type
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {cropData.map((crop, index) => (
-                <div key={crop.crop} className="space-y-3">
-                  <div className="flex items-center justify-between">
+                <div key={crop.crop} className="space-y-2 sm:space-y-3">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2 sm:gap-0">
                     <div>
-                      <h3 className="font-medium text-foreground">{crop.crop}</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <h3 className="font-medium text-foreground text-sm sm:text-base">{crop.crop}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {crop.scans} scans • {crop.diseases} diseases detected
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-foreground">{crop.healthyRate}%</p>
+                      <p className="font-semibold text-foreground text-sm sm:text-base">{crop.healthyRate}%</p>
                       <p className="text-xs text-muted-foreground">Health Rate</p>
                     </div>
                   </div>
-                  <Progress value={crop.healthyRate} className="h-3" />
+                  <Progress value={crop.healthyRate} className="h-2 sm:h-3" />
                 </div>
               ))}
             </div>
@@ -220,15 +220,15 @@ export default function AnalyticsPage() {
         </Card>
 
         {/* ===== INSIGHTS & RECOMMENDATIONS ===== */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
           <Card className="glass-card hover:glass transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-foreground">Key Insights</CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardTitle className="text-foreground text-base sm:text-lg">Key Insights</CardTitle>
+              <CardDescription className="text-xs sm:text-sm text-muted-foreground">
                 AI-generated insights from your farming data
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 sm:space-y-4">
               <div className="glass p-4 rounded-xl">
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 gradient-success rounded-full mt-2"></div>
@@ -269,12 +269,12 @@ export default function AnalyticsPage() {
 
           <Card className="glass-card hover:glass transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-foreground">Recommendations</CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardTitle className="text-foreground text-base sm:text-lg">Recommendations</CardTitle>
+              <CardDescription className="text-xs sm:text-sm text-muted-foreground">
                 Personalized recommendations to improve your farm health
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 sm:space-y-4">
               <div className="glass p-4 rounded-xl">
                 <div className="flex items-start space-x-3">
                   <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">

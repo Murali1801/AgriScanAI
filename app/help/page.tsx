@@ -102,9 +102,9 @@ export default function HelpPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-pink/5">
       <DashboardHeader />
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* ===== BREADCRUMB ===== */}
-        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
           <Link href="/dashboard" className="hover:text-primary transition-colors">
             Dashboard
           </Link>
@@ -113,13 +113,13 @@ export default function HelpPage() {
         </div>
 
         {/* ===== PAGE HEADER ===== */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Help & Support</h1>
-            <p className="text-muted-foreground">Get help with AgriScan AI and connect with our support team</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Help & Support</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">Get help with AgriScan AI and connect with our support team</p>
           </div>
-          <Link href="/dashboard">
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+          <Link href="/dashboard" className="w-full sm:w-auto">
+            <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
@@ -128,31 +128,31 @@ export default function HelpPage() {
 
         {/* ===== SEARCH HELP ===== */}
         <Card className="glass-card hover:glass transition-all duration-300">
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="relative max-w-2xl mx-auto">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 placeholder="Search for help articles, tutorials, or common issues..."
-                className="pl-12 h-12 glass text-lg"
+                className="pl-12 h-10 sm:h-12 glass text-base sm:text-lg"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* ===== SUPPORT CHANNELS ===== */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {supportChannels.map((channel, index) => (
             <Card key={index} className="glass-card hover:glass transition-all duration-300 group cursor-pointer">
               <CardHeader className="text-center">
                 <div
-                  className={`w-16 h-16 ${channel.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:animate-pulse-glow`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 ${channel.gradient} rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:animate-pulse-glow`}
                 >
-                  <channel.icon className="h-8 w-8 text-white" />
+                  <channel.icon className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
                 </div>
-                <CardTitle className="text-foreground">{channel.title}</CardTitle>
-                <CardDescription className="text-muted-foreground">{channel.description}</CardDescription>
+                <CardTitle className="text-base sm:text-lg text-foreground">{channel.title}</CardTitle>
+                <CardDescription className="text-xs sm:text-sm text-muted-foreground">{channel.description}</CardDescription>
               </CardHeader>
-              <CardContent className="text-center space-y-4">
+              <CardContent className="text-center space-y-3 sm:space-y-4">
                 <Badge variant="outline" className="glass border-primary/20">
                   {channel.available}
                 </Badge>
@@ -175,19 +175,19 @@ export default function HelpPage() {
               </div>
               <span>Frequently Asked Questions</span>
             </CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription className="text-xs sm:text-sm text-muted-foreground">
               Find quick answers to common questions about AgriScan AI
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 sm:space-y-4">
             {faqData.map((faq, index) => (
-              <div key={index} className="glass p-6 rounded-xl hover:glass-dark transition-all duration-300 group">
-                <div className="flex items-start justify-between">
+              <div key={index} className="glass p-4 sm:p-6 rounded-xl hover:glass-dark transition-all duration-300 group">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   <div className="flex-1">
-                    <h3 className="font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="font-medium text-foreground mb-1 sm:mb-2 group-hover:text-primary transition-colors text-base sm:text-lg">
                       {faq.question}
                     </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{faq.answer}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
                   </div>
                   <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
                 </div>

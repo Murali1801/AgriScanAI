@@ -84,9 +84,9 @@ export default function HistoryPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-pink/5">
       <DashboardHeader />
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* ===== BREADCRUMB ===== */}
-        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
           <Link href="/dashboard" className="hover:text-primary transition-colors">
             Dashboard
           </Link>
@@ -95,18 +95,18 @@ export default function HistoryPage() {
         </div>
 
         {/* ===== PAGE HEADER ===== */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Scan History</h1>
-            <p className="text-muted-foreground">View and manage all your previous crop scans</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Scan History</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">View and manage all your previous crop scans</p>
           </div>
-          <div className="flex space-x-4">
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+            <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
               <Download className="h-4 w-4 mr-2" />
               Export Data
             </Button>
-            <Link href="/dashboard">
-              <Button variant="outline" className="glass hover:glass-dark bg-transparent">
+            <Link href="/dashboard" className="w-full sm:w-auto">
+              <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -116,8 +116,8 @@ export default function HistoryPage() {
 
         {/* ===== FILTERS ===== */}
         <Card className="glass-card">
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <CardContent className="pt-4 sm:pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input placeholder="Search scans..." className="pl-10 glass" />
@@ -159,11 +159,11 @@ export default function HistoryPage() {
         </Card>
 
         {/* ===== SCAN HISTORY GRID ===== */}
-        <div className="grid gap-6">
+        <div className="flex flex-col gap-4">
           {scanHistory.map((scan) => (
             <Card key={scan.id} className="glass-card hover:glass transition-all duration-300 group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-6">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                   {/* Image */}
                   <div className="flex-shrink-0">
                     <Image
@@ -176,11 +176,11 @@ export default function HistoryPage() {
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1 min-w-0 w-full">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
                       <div>
-                        <h3 className="text-lg font-semibold text-foreground">{scan.crop}</h3>
-                        <p className="text-muted-foreground">{scan.disease}</p>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground">{scan.crop}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{scan.disease}</p>
                       </div>
                       <Badge
                         variant={scan.status === "Healthy" ? "default" : "destructive"}
@@ -199,7 +199,7 @@ export default function HistoryPage() {
                       </Badge>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-3 sm:mb-4">
                       <div>
                         <p className="text-xs text-muted-foreground">Confidence</p>
                         <p className="font-medium text-foreground">{scan.confidence}%</p>
@@ -233,12 +233,12 @@ export default function HistoryPage() {
                       </div>
                     </div>
 
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline" className="glass hover:glass-dark bg-transparent">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button size="sm" variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </Button>
-                      <Button size="sm" variant="outline" className="glass hover:glass-dark bg-transparent">
+                      <Button size="sm" variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
                         <Download className="h-4 w-4 mr-2" />
                         Download Report
                       </Button>
@@ -251,22 +251,20 @@ export default function HistoryPage() {
         </div>
 
         {/* ===== PAGINATION ===== */}
-        <div className="flex justify-center">
-          <div className="flex space-x-2">
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent" disabled>
-              Previous
-            </Button>
-            <Button className="gradient-primary text-white">1</Button>
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
-              2
-            </Button>
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
-              3
-            </Button>
-            <Button variant="outline" className="glass hover:glass-dark bg-transparent">
-              Next
-            </Button>
-          </div>
+        <div className="flex flex-col sm:flex-row justify-center gap-2">
+          <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto" disabled>
+            Previous
+          </Button>
+          <Button className="gradient-primary text-white w-full sm:w-auto">1</Button>
+          <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
+            2
+          </Button>
+          <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
+            3
+          </Button>
+          <Button variant="outline" className="glass hover:glass-dark bg-transparent w-full sm:w-auto">
+            Next
+          </Button>
         </div>
       </main>
     </div>

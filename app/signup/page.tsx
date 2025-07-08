@@ -52,19 +52,19 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-pink-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
-      <Card className="w-full max-w-md glass-card shadow-2xl border-0">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-extrabold text-foreground flex items-center justify-center space-x-2">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-pink-100 to-purple-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors p-2 sm:p-4">
+      <Card className="w-full max-w-md glass-card shadow-2xl border-0 rounded-2xl sm:rounded-3xl px-2 sm:px-6 py-6 sm:py-10">
+        <CardHeader className="text-center mb-2 sm:mb-4">
+          <CardTitle className="text-2xl sm:text-3xl font-extrabold text-foreground flex items-center justify-center space-x-2 mb-2">
             <div className="flex items-center justify-center w-10 h-10 gradient-primary rounded-lg animate-glow">
               <Leaf className="h-6 w-6 text-white" />
             </div>
             <span>AgriScan AI</span>
           </CardTitle>
-          <CardDescription className="text-muted-foreground mt-2 text-base">Create a new account</CardDescription>
+          <CardDescription className="text-muted-foreground mt-1 sm:mt-2 text-base">Create a new account</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Button type="button" variant="outline" className="w-full flex items-center justify-center font-semibold bg-white text-black border hover:bg-gray-100 transition" onClick={handleGoogleSignUp}>
+          <Button type="button" variant="outline" className="w-full flex items-center justify-center font-semibold bg-white text-black border hover:bg-gray-100 transition rounded-lg shadow-sm py-3 text-base sm:text-lg" onClick={handleGoogleSignUp}>
             <GoogleLogo /> Sign up with Google
           </Button>
           <div className="flex items-center my-2">
@@ -74,24 +74,24 @@ export default function SignupPage() {
           </div>
           <form className="space-y-4" onSubmit={handleEmailSignup}>
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-foreground font-medium">
+              <Label htmlFor="name" className="text-foreground font-medium text-sm sm:text-base">
                 Name
               </Label>
-              <Input id="name" name="name" placeholder="Enter your name" type="text" className="glass" autoComplete="name" />
+              <Input id="name" name="name" placeholder="Enter your name" type="text" className="glass w-full px-4 py-3 rounded-lg text-base" autoComplete="name" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-medium">
+              <Label htmlFor="email" className="text-foreground font-medium text-sm sm:text-base">
                 Email
               </Label>
-              <Input id="email" name="email" placeholder="Enter your email" type="email" className="glass" autoComplete="email" />
+              <Input id="email" name="email" placeholder="Enter your email" type="email" className="glass w-full px-4 py-3 rounded-lg text-base" autoComplete="email" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-medium">
+              <Label htmlFor="password" className="text-foreground font-medium text-sm sm:text-base">
                 Password
               </Label>
-              <Input id="password" name="password" placeholder="Enter your password" type="password" className="glass" autoComplete="new-password" />
+              <Input id="password" name="password" placeholder="Enter your password" type="password" className="glass w-full px-4 py-3 rounded-lg text-base" autoComplete="new-password" />
             </div>
-            <Button className="w-full gradient-primary text-white font-semibold hover:opacity-90 transition-all duration-300 py-3 rounded-lg shadow-md">
+            <Button className="w-full gradient-primary text-white font-semibold hover:opacity-90 transition-all duration-300 py-3 rounded-lg shadow-md text-base sm:text-lg mt-2">
               Sign up
             </Button>
           </form>
