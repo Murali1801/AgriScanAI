@@ -74,9 +74,12 @@ export default function LandingPage() {
 
           {/* Mobile Navigation */}
           <div className="flex items-center space-x-2 md:hidden">
+            <div className="order-first">
+              <ThemeToggle />
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="glass order-first">
+                <Button variant="ghost" size="icon" className="glass order-last">
                   <Menu className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -89,9 +92,6 @@ export default function LandingPage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div className="order-last">
-              <ThemeToggle />
-            </div>
           </div>
         </div>
       </header>
