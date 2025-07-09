@@ -74,7 +74,7 @@ export default function LandingPage() {
           {/* Mobile Navigation */}
           <div className="flex items-center space-x-2 md:hidden">
             <div className="order-first">
-              <ThemeToggle />
+            <ThemeToggle />
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -135,13 +135,13 @@ export default function LandingPage() {
               </Button>
             </Link>
             <div className="w-full">
-              <Button
-                size="lg"
-                variant="outline"
+            <Button
+              size="lg"
+              variant="outline"
                 className="w-full text-lg px-8 py-4 glass hover:glass-dark transition-all duration-300 bg-transparent"
-              >
-                Watch Demo
-              </Button>
+            >
+              Watch Demo
+            </Button>
             </div>
           </div>
 
