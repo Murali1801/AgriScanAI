@@ -29,38 +29,41 @@ import Link from "next/link"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { useEffect, useState } from "react"
 import { getAuth, onAuthStateChanged, User as FirebaseUser } from "firebase/auth"
-import app from "@/lib/firebase"
+import app, { db } from "@/lib/firebase"
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 
 export default function DashboardPage() {
-  const recentScans = [
-    {
-      id: 1,
-      crop: "Tomato",
-      disease: "Early Blight",
-      confidence: 94,
-      status: "Disease Detected",
-      date: "2024-01-15",
-      image: "/placeholder.svg?height=60&width=60",
-    },
-    {
-      id: 2,
-      crop: "Wheat",
-      disease: "Healthy",
-      confidence: 98,
-      status: "Healthy",
-      date: "2024-01-14",
-      image: "/placeholder.svg?height=60&width=60",
-    },
-    {
-      id: 3,
-      crop: "Cotton",
-      disease: "Leaf Curl",
-      confidence: 87,
-      status: "Disease Detected",
-      date: "2024-01-13",
-      image: "/placeholder.svg?height=60&width=60",
-    },
-  ]
+  const [user, setUser] = useState<FirebaseUser | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const [scans, setScans] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setMounted(true)
+    const auth = getAuth(app)
+    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser)
+    })
+    return () => unsubscribeAuth()
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+    const q = query(collection(db, "users", user.uid, "scans"), orderBy("createdAt", "desc"))
+    const unsub = onSnapshot(q, (snapshot) => {
+      setScans(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      setLoading(false)
+    })
+    return () => unsub()
+  }, [user])
+
+  // Compute stats
+  const totalScans = scans.length
+  const healthyCount = scans.filter(s => s.scanResult?.status === "healthy" || s.scanResult?.status === "Healthy").length
+  const diseasedCount = scans.filter(s => s.scanResult?.status === "diseased" || s.scanResult?.status === "Disease Detected").length
+  const avgConfidence = scans.length > 0 ? Math.round(scans.reduce((sum, s) => sum + (parseFloat(s.scanResult?.confidence) || 0), 0) / scans.length) : 0
+  const displayName = user?.displayName || user?.email?.split("@")?.[0] || ""
+  const recentScans = scans.slice(0, 5)
 
   const quickActions = [
     {
@@ -85,19 +88,6 @@ export default function DashboardPage() {
       gradient: "bg-gradient-to-br from-teal-400 via-indigo-400 to-pink-400",
     },
   ]
-
-  // Get current user for greeting
-  const [user, setUser] = useState<FirebaseUser | null>(null)
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
-    const auth = getAuth(app)
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser)
-    })
-    return () => unsubscribe()
-  }, [])
-  const displayName = user?.displayName || user?.email?.split("@")[0] || ""
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-pink/5">
@@ -174,14 +164,13 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">247</div>
+              <div className="text-3xl font-bold text-foreground">{loading ? '-' : totalScans}</div>
               <p className="text-xs text-muted-foreground flex items-center mt-1">
                 <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +12% from last month
+                {/* You can add a trend calculation here if desired */}
               </p>
             </CardContent>
           </Card>
-
           <Card className="glass-card hover:glass transition-all duration-300 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">Diseases Detected</CardTitle>
@@ -190,11 +179,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">23</div>
+              <div className="text-3xl font-bold text-foreground">{loading ? '-' : diseasedCount}</div>
               <p className="text-xs text-muted-foreground">Early detection saved crops</p>
             </CardContent>
           </Card>
-
           <Card className="glass-card hover:glass transition-all duration-300 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">Healthy Crops</CardTitle>
@@ -203,14 +191,13 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">224</div>
+              <div className="text-3xl font-bold text-foreground">{loading ? '-' : healthyCount}</div>
               <p className="text-xs text-muted-foreground flex items-center mt-1">
                 <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
-                91% healthy rate
+                {totalScans > 0 ? `${Math.round((healthyCount / totalScans) * 100)}% healthy rate` : '-'}
               </p>
             </CardContent>
           </Card>
-
           <Card className="glass-card hover:glass transition-all duration-300 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">Avg. Confidence</CardTitle>
@@ -219,7 +206,7 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-foreground">93%</div>
+              <div className="text-3xl font-bold text-foreground">{loading ? '-' : `${avgConfidence}%`}</div>
               <p className="text-xs text-muted-foreground">High accuracy rate</p>
             </CardContent>
           </Card>
@@ -264,51 +251,66 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4 mt-10 sm:mt-14">
           <div className="flex items-center justify-between px-2">
             <h2 className="text-xl font-semibold text-foreground">Recent Scans</h2>
-                <Link href="/history">
-                  <Button variant="outline" size="sm" className="glass hover:glass-dark bg-transparent rounded-xl">
-                    View All
-                  </Button>
-                </Link>
-              </div>
+            <Link href="/history">
+              <Button variant="outline" size="sm" className="glass hover:glass-dark bg-transparent rounded-xl">
+                View All
+              </Button>
+            </Link>
+          </div>
           <div className="flex gap-4 overflow-x-auto pb-2 px-2 -mx-2">
-                {recentScans.map((scan) => (
-              <Card
+            {loading ? (
+              <div className="text-muted-foreground py-8">Loading...</div>
+            ) : recentScans.length === 0 ? (
+              <div className="text-muted-foreground py-8">No recent scans.</div>
+            ) : (
+              recentScans.map((scan) => {
+                const result = scan.scanResult || {}
+                const isHealthy = result.status === "healthy" || result.status === "Healthy"
+                const crop = result.crop || "Unknown"
+                const disease = result.disease_name || result.message || "Healthy"
+                const confidence = result.confidence || "-"
+                const createdAt = scan.createdAt?.toDate ? scan.createdAt.toDate() : null
+                const date = createdAt ? createdAt.toLocaleDateString() : "-"
+                return (
+                  <Card
                     key={scan.id}
-                className="min-w-[260px] max-w-xs w-full flex-shrink-0 glass-card hover:glass-dark transition-all duration-300 group"
+                    className="min-w-[260px] max-w-xs w-full flex-shrink-0 glass-card hover:glass-dark transition-all duration-300 group"
                   >
-                <CardContent className="flex flex-col items-center p-4">
-                    <Image
-                      src={scan.image || "/placeholder.svg"}
-                      alt={scan.crop}
-                      width={60}
-                      height={60}
-                    className="rounded-xl object-cover mb-2 group-hover:scale-105 transition-transform duration-300"
-                    />
-                  <div className="w-full">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-foreground text-base">{scan.crop}</p>
-                        <Badge
-                          variant={scan.status === "Healthy" ? "default" : "destructive"}
-                          className={scan.status === "Healthy" ? "gradient-success text-white border-0" : ""}
-                        >
-                          {scan.status}
-                        </Badge>
-                      </div>
-                    <p className="text-sm text-muted-foreground mb-1">{scan.disease}</p>
-                      <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Conf:</span>
-                      <Progress value={scan.confidence} className="w-16 h-2" />
-                          <span className="text-xs font-medium text-foreground">{scan.confidence}%</span>
+                    <CardContent className="flex flex-col items-center p-4">
+                      <Image
+                        src={scan.imageUrl || "/placeholder.svg"}
+                        alt={crop}
+                        width={60}
+                        height={60}
+                        className="rounded-xl object-cover mb-2 group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="w-full">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="font-medium text-foreground text-base">{crop}</p>
+                          <Badge
+                            variant={isHealthy ? "default" : "destructive"}
+                            className={isHealthy ? "gradient-success text-white border-0" : "gradient-warning text-white border-0"}
+                          >
+                            {isHealthy ? "Healthy" : "Disease Detected"}
+                          </Badge>
                         </div>
-                    <div className="flex items-center space-x-1 text-xs text-muted-foreground mt-1">
+                        <p className="text-sm text-muted-foreground mb-1">{disease}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground">Conf:</span>
+                          <Progress value={parseFloat(confidence) || 0} className="w-16 h-2" />
+                          <span className="text-xs font-medium text-foreground">{confidence}%</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground mt-1">
                           <Clock className="h-3 w-3" />
-                          <span>{scan.date}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-                ))}
-              </div>
+                          <span>{date}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })
+            )}
+          </div>
         </div>
 
         {/* ===== Farm Overview (reorganized for mobile) ===== */}

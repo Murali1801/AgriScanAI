@@ -19,6 +19,9 @@ import {
 import { DashboardHeader } from "@/components/dashboard-header"
 import Link from "next/link"
 import React, { useState, useRef } from "react"
+import { db } from "@/lib/firebase"
+import { getAuth } from "firebase/auth"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
 
 type ScanResultHealthy = {
   crop: string
@@ -51,13 +54,31 @@ export default function ScanPage() {
     }
   }
 
+  const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dadz5dzth/image/upload"
+  const CLOUDINARY_UPLOAD_PRESET = "agriscan_unsigned"
+  const CLOUDINARY_UPLOAD_FOLDER = "agriscan_uploads"
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0]
     if (file) {
-      setIsScanning(true)
+    setIsScanning(true)
       setScanResult(null)
       setError("")
       try {
+        // 1. Upload image to Cloudinary
+        const formDataCloud = new FormData()
+        formDataCloud.append("file", file)
+        formDataCloud.append("upload_preset", CLOUDINARY_UPLOAD_PRESET)
+        formDataCloud.append("folder", CLOUDINARY_UPLOAD_FOLDER)
+        const cloudRes = await fetch(CLOUDINARY_UPLOAD_URL, {
+          method: "POST",
+          body: formDataCloud,
+        })
+        if (!cloudRes.ok) throw new Error("Failed to upload image to Cloudinary")
+        const cloudData = await cloudRes.json()
+        const imageUrl = cloudData.secure_url
+
+        // 2. Analyze image with API
         const formData = new FormData()
         formData.append("image", file)
         const response = await fetch("https://agriscanapi.onrender.com/analyze-leaf", {
@@ -70,10 +91,22 @@ export default function ScanPage() {
         }
         const data = await response.json()
         setScanResult(data)
+
+        // 3. Save scan result + image URL to Firestore
+        const auth = getAuth()
+        const user = auth.currentUser
+        if (user) {
+          await addDoc(collection(db, "users", user.uid, "scans"), {
+            imageUrl,
+            scanResult: data,
+            createdAt: serverTimestamp(),
+            fileName: file.name,
+          })
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to analyze image. Please try again.")
       } finally {
-        setIsScanning(false)
+      setIsScanning(false)
       }
     }
   }
@@ -256,26 +289,26 @@ export default function ScanPage() {
                     scanResult.status === "diseased" && (
                       <>
                         <div className="glass p-4 sm:p-6 rounded-xl">
-                          <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold text-foreground">Disease Detection</h3>
-                            <Badge variant="destructive" className="gradient-warning text-white border-0">
-                              {scanResult.status}
-                            </Badge>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Crop Type:</span>
-                              <span className="font-medium text-foreground">{scanResult.crop}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Disease:</span>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-foreground">Disease Detection</h3>
+                      <Badge variant="destructive" className="gradient-warning text-white border-0">
+                        {scanResult.status}
+                      </Badge>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Crop Type:</span>
+                        <span className="font-medium text-foreground">{scanResult.crop}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Disease:</span>
                               <span className="font-medium text-foreground">{scanResult.disease_name}</span>
-                            </div>
-                            <div className="flex justify-between">
+                      </div>
+                      <div className="flex justify-between">
                               <span className="text-muted-foreground">Symptoms:</span>
                               <span className="font-medium text-foreground">{scanResult.symptoms}</span>
-                            </div>
-                            <div className="flex justify-between">
+                      </div>
+                        <div className="flex justify-between">
                               <span className="text-muted-foreground">Affected %:</span>
                               <span className="font-medium text-orange-500">{scanResult.affected_percentage}</span>
                             </div>
@@ -286,20 +319,20 @@ export default function ScanPage() {
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Chemical Remedy: </span>
                             <span className="text-muted-foreground">{scanResult.chemical_remedy}</span>
-                          </div>
+                      </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Organic Remedy: </span>
                             <span className="text-muted-foreground">{scanResult.organic_remedy}</span>
-                          </div>
+                    </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Preventive Measures: </span>
                             <span className="text-muted-foreground">{scanResult.preventive_measures}</span>
-                          </div>
+                  </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Recommended Action: </span>
                             <span className="text-muted-foreground">{scanResult.recommended_action}</span>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
                       </>
                     )
                   )}
