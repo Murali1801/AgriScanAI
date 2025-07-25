@@ -258,84 +258,88 @@ export default function ScanPage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {scanResult.status === "healthy" ? (
-                    <div className="glass p-4 sm:p-6 rounded-xl">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-foreground">Crop Health</h3>
-                        <Badge variant="default" className="gradient-success text-white border-0">
-                          Healthy
-                        </Badge>
-                      </div>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Crop Type:</span>
-                          <span className="font-medium text-foreground">{scanResult.crop}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Status:</span>
-                          <span className="font-medium text-green-600">{scanResult.status}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Message:</span>
-                          <span className="font-medium text-foreground">{scanResult.message}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Recommended Practices:</span>
-                          <span className="font-medium text-foreground">{scanResult.recommended_practices}</span>
+                  {scanResult && typeof scanResult === 'object' && Object.keys(scanResult).length > 0 ? (
+                    'error' in scanResult && scanResult.error ? (
+                      <div className="glass p-4 sm:p-6 rounded-xl bg-red-100 border border-red-300">
+                        <div className="text-red-700 font-semibold text-center">
+                          {scanResult.error}
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    scanResult.status === "diseased" && (
-                      <>
-                        <div className="glass p-4 sm:p-6 rounded-xl">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-foreground">Disease Detection</h3>
-                      <Badge variant="destructive" className="gradient-warning text-white border-0">
-                        {scanResult.status}
-                      </Badge>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Crop Type:</span>
-                        <span className="font-medium text-foreground">{scanResult.crop}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Disease:</span>
-                              <span className="font-medium text-foreground">{scanResult.disease_name}</span>
-                      </div>
-                      <div className="flex justify-between">
-                              <span className="text-muted-foreground">Symptoms:</span>
-                              <span className="font-medium text-foreground">{scanResult.symptoms}</span>
-                      </div>
-                        <div className="flex justify-between">
-                              <span className="text-muted-foreground">Affected %:</span>
-                              <span className="font-medium text-orange-500">{scanResult.affected_percentage}</span>
-                            </div>
+                    ) : scanResult.status === "healthy" ? (
+                      <div className="glass p-4 sm:p-6 rounded-xl">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-foreground">Crop Health</h3>
+                          <Badge variant="default" className="gradient-success text-white border-0">
+                            Healthy
+                          </Badge>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Crop Type:</span>
+                            <span className="font-medium text-foreground">{scanResult.crop}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Status:</span>
+                            <span className="font-medium text-green-600">{scanResult.status}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Message:</span>
+                            <span className="font-medium text-foreground">{scanResult.message}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Recommended Practices:</span>
+                            <span className="font-medium text-foreground">{scanResult.recommended_practices}</span>
                           </div>
                         </div>
-                        <div className="glass p-4 sm:p-6 rounded-xl">
+                      </div>
+                    ) : scanResult.status === "diseased" ? (
+                      <div className="glass p-4 sm:p-6 rounded-xl">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-foreground">Disease Detection</h3>
+                          <Badge variant="destructive" className="gradient-warning text-white border-0">
+                            {scanResult.status}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Crop Type:</span>
+                            <span className="font-medium text-foreground">{scanResult.crop}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Disease:</span>
+                            <span className="font-medium text-foreground">{scanResult.disease_name}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Symptoms:</span>
+                            <span className="font-medium text-foreground">{scanResult.symptoms}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Affected %:</span>
+                            <span className="font-medium text-orange-500">{scanResult.affected_percentage}</span>
+                          </div>
+                        </div>
+                        <div className="glass p-4 sm:p-6 rounded-xl mt-4">
                           <h3 className="font-semibold text-foreground mb-4">Treatment Recommendation</h3>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Chemical Remedy: </span>
                             <span className="text-muted-foreground">{scanResult.chemical_remedy}</span>
-                      </div>
+                          </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Organic Remedy: </span>
                             <span className="text-muted-foreground">{scanResult.organic_remedy}</span>
-                    </div>
+                          </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Preventive Measures: </span>
                             <span className="text-muted-foreground">{scanResult.preventive_measures}</span>
-                  </div>
+                          </div>
                           <div className="mb-2">
                             <span className="font-semibold text-foreground">Recommended Action: </span>
                             <span className="text-muted-foreground">{scanResult.recommended_action}</span>
-                    </div>
-                  </div>
-                      </>
-                    )
-                  )}
+                          </div>
+                        </div>
+                      </div>
+                    ) : null
+                  ) : null}
                 </div>
               )}
             </CardContent>

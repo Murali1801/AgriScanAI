@@ -54,7 +54,7 @@ export default function AnalyticsPage() {
         {/* ===== PAGE HEADER ===== */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Farm Analytics</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analytics</h1>
             <p className="text-muted-foreground text-sm sm:text-base">Comprehensive insights into your crop health and farming patterns</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
@@ -73,73 +73,6 @@ export default function AnalyticsPage() {
               </Button>
             </Link>
           </div>
-        </div>
-
-        {/* ===== KEY METRICS ===== */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Total Scans</CardTitle>
-              <div className="p-2 gradient-primary rounded-xl group-hover:animate-pulse-glow">
-                <BarChart3 className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">247</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +12% from last month
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Disease Detection Rate</CardTitle>
-              <div className="p-2 gradient-warning rounded-xl group-hover:animate-pulse-glow">
-                <AlertTriangle className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">9.3%</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingDown className="h-3 w-3 mr-1 text-green-500" />
-                -2.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Prevention Success</CardTitle>
-              <div className="p-2 gradient-success rounded-xl group-hover:animate-pulse-glow">
-                <Shield className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">87%</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +5% from last month
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">AI Accuracy</CardTitle>
-              <div className="p-2 gradient-tertiary rounded-xl group-hover:animate-pulse-glow">
-                <Target className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">93%</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                +1.2% from last month
-              </p>
-            </CardContent>
-          </Card>
         </div>
 
         {/* ===== MONTHLY TRENDS ===== */}

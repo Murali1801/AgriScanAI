@@ -154,64 +154,6 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* ===== STATS OVERVIEW ===== */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 sm:mt-14">
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 rounded-t-2xl">
-              <CardTitle className="text-sm font-medium text-black">Total Scans</CardTitle>
-              <div className="p-2 gradient-primary rounded-xl">
-                <Camera className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{loading ? '-' : totalScans}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                {/* You can add a trend calculation here if desired */}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Diseases Detected</CardTitle>
-              <div className="p-2 gradient-warning rounded-xl group-hover:animate-pulse-glow">
-                <AlertTriangle className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{loading ? '-' : diseasedCount}</div>
-              <p className="text-xs text-muted-foreground">Early detection saved crops</p>
-            </CardContent>
-          </Card>
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Healthy Crops</CardTitle>
-              <div className="p-2 gradient-success rounded-xl group-hover:animate-pulse-glow">
-                <CheckCircle className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{loading ? '-' : healthyCount}</div>
-              <p className="text-xs text-muted-foreground flex items-center mt-1">
-                <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
-                {totalScans > 0 ? `${Math.round((healthyCount / totalScans) * 100)}% healthy rate` : '-'}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="glass-card hover:glass transition-all duration-300 group">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">Avg. Confidence</CardTitle>
-              <div className="p-2 gradient-tertiary rounded-xl group-hover:animate-pulse-glow">
-                <Target className="h-4 w-4 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-foreground">{loading ? '-' : `${avgConfidence}%`}</div>
-              <p className="text-xs text-muted-foreground">High accuracy rate</p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* ===== QUICK SCAN SECTION (reorganized for mobile) ===== */}
         <Card className="glass-card hover:glass transition-all duration-300 mt-10 sm:mt-14">
           <CardHeader className="pb-2">
@@ -312,69 +254,6 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-
-        {/* ===== Farm Overview (reorganized for mobile) ===== */}
-        <Card className="glass-card hover:glass transition-all duration-300 mt-10 sm:mt-14">
-            <CardHeader>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div>
-                <CardTitle className="text-lg sm:text-xl text-foreground">Farm Overview</CardTitle>
-                <CardDescription className="text-muted-foreground text-base sm:text-lg">
-                    Your farming statistics and insights
-                  </CardDescription>
-                </div>
-                <Link href="/analytics">
-                <Button variant="outline" size="sm" className="glass hover:glass-dark bg-transparent rounded-xl mt-2 sm:mt-0">
-                    Analytics
-                  </Button>
-                </Link>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="glass p-4 rounded-xl text-center group hover:glass-dark transition-all duration-300">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">Location</span>
-                  </div>
-                  <span className="text-sm text-muted-foreground">Punjab, India</span>
-                </div>
-
-                <div className="glass p-4 rounded-xl text-center group hover:glass-dark transition-all duration-300">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <Leaf className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">Primary Crop</span>
-                  </div>
-                  <span className="text-sm text-muted-foreground">Wheat</span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row justify-between text-sm gap-1">
-                    <span className="text-foreground">Farm Health Score</span>
-                    <span className="font-medium text-foreground">91%</span>
-                  </div>
-                  <Progress value={91} className="h-3" />
-                </div>
-
-                <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row justify-between text-sm gap-1">
-                    <span className="text-foreground">Disease Prevention Rate</span>
-                    <span className="font-medium text-foreground">87%</span>
-                  </div>
-                  <Progress value={87} className="h-3" />
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-border">
-                <Button className="w-full gradient-primary text-white hover:opacity-90 transition-all duration-300 rounded-xl py-3">
-                  Schedule Expert Consultation
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
 
         {/* ===== AI INSIGHTS SECTION ===== */}
         <Card className="glass-card hover:glass transition-all duration-300 mt-10 sm:mt-14">

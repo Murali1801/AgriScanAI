@@ -262,11 +262,27 @@ export default function HistoryPage() {
                 />
               </div>
               <div>
-                <p><strong>Crop:</strong> {selectedScan.scanResult?.crop || "Unknown"}</p>
-                <p><strong>Disease:</strong> {selectedScan.scanResult?.disease_name || selectedScan.scanResult?.message || "Healthy"}</p>
-                <p><strong>Status:</strong> {selectedScan.scanResult?.status || "-"}</p>
-                <p><strong>Confidence:</strong> {selectedScan.scanResult?.confidence || "-"}</p>
-                <p><strong>Severity:</strong> {selectedScan.scanResult?.affected_percentage || "-"}</p>
+                {selectedScan.scanResult?.error ? (
+                  <div className="text-red-600 font-semibold text-center">
+                    {selectedScan.scanResult.error}
+                  </div>
+                ) : selectedScan.scanResult?.status === "healthy" ? (
+                  <div className="flex flex-col items-center mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 mb-2">
+                      Healthy
+                    </span>
+                    <p className="text-center text-green-700 font-medium mb-2">
+                      {selectedScan.scanResult.message}
+                    </p>
+                    <p className="text-center text-green-700">
+                      <strong>Recommended Practices:</strong> {selectedScan.scanResult.recommended_practices}
+                    </p>
+                  </div>
+                ) : (
+                  selectedScan.scanResult && Object.entries(selectedScan.scanResult).map(([key, value]) => (
+                    <p key={key}><strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {value as string}</p>
+                  ))
+                )}
                 <p><strong>Date:</strong> {selectedScan.createdAt?.toDate ? selectedScan.createdAt.toDate().toLocaleDateString() : "-"}</p>
                 <p><strong>Time:</strong> {selectedScan.createdAt?.toDate ? selectedScan.createdAt.toDate().toLocaleTimeString() : "-"}</p>
                 {selectedScan.fileName && <p><strong>File Name:</strong> {selectedScan.fileName}</p>}
